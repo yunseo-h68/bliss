@@ -17,5 +17,6 @@ struct option {
 }
 
 struct option* new_option(const char* name);
+void delete_option(struct option* option_info);
 
 #endif

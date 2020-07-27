@@ -1,7 +1,7 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "option.h"
+
+#define OPTION_STR_SIZE 256
 
 struct option {
 	char name[OPTION_STR_SIZE];
@@ -83,4 +83,9 @@ struct option* new_option(const char* name)
 	tmp->set_description = set_description;
 	tmp->set_exec_func = set_exec_func;
 	return tmp;
+}
+
+void delete_option(struct option* option_info)
+{
+	free(option_info);
 }
