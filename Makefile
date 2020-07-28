@@ -1,17 +1,18 @@
-CXX               = g++
+CC               = gcc
 LIB_TARGET        = libbliss
 LIB_VERSION       = 0.0.0
 LIB_VERSION_MAJOR = 0
 LIB_DIR           = lib
 SRC_DIR           = src
 OBJS              = *.o
-SRCS              = $(OBJS:.o=.cpp)
+SRCS              = $(OBJS:.o=.c)
+LINK_LIBS         = -lm
 EXAMPLE_TARGET    = bin/example
 EXAMPLE_DIR       = example
 
-$(LIB_TARGET):$(SRC_DIR)/$(SRCS)
-	$(CXX) -fPIC -c $(SRC_DIR)/$(SRCS)
-	$(CXX) -shared -Wl,-soname,$(LIB_DIR)/$(LIB_TARGET).so.$(LIB_VERSION_MAJOR) -o $(LIB_DIR)/$(LIB_TARGET).so.$(LIB_VERSION) $(OBJS)
+$(LIB_TARGET):$(SRC_DIR)/$(SRCS) $(SRC_DIR)/*/$(SRCS)
+	$(CC) -fPIC -c $^ $(LINK_LIBS)
+	$(CC) -shared -Wl,-soname,$(LIB_DIR)/$(LIB_TARGET).so.$(LIB_VERSION_MAJOR) -o $(LIB_DIR)/$(LIB_TARGET).so.$(LIB_VERSION) $(OBJS)
 
 ifeq (exist, $(shell [ ! -d ./bin ] && echo exist))
 	mkdir lib
@@ -35,7 +36,7 @@ $(EXAMPLE_TARGET): $(LIB_TARGET)
 ifeq (exist, $(shell [ ! -d ./bin ] && echo exist))
 	mkdir bin
 endif
-	$(CXX) -o $@ $(EXAMPLE_DIR)/$(SRCS) -I. ./$(LIB_DIR)/$(LIB_TARGET).so.$(LIB_VERSION)
+	$(CC) -o $@ $(EXAMPLE_DIR)/$(SRCS) -I. ./$(LIB_DIR)/$(LIB_TARGET).so.$(LIB_VERSION) $(LINK_LIBS)
 
 clean:
 	rm -f *.o $(LIB_DIR)/$(LIB_TARGET).* bin/*

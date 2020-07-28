@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "../util/util.h"
 
@@ -18,7 +21,7 @@ struct version {
 	struct version* (*up_release)(struct version* this);
 	struct version* (*up_major)(struct version* this);
 	struct version* (*up_minor)(struct version* this);
-}
+};
 
 static int version_parse_number(int* version_num, const char* version_str, int start, int finish)
 {
@@ -126,7 +129,7 @@ static struct version* this_up_minor(struct version* this)
 
 struct version* new_version()
 {
-	struct version* tmp = (struct *version)malloc(sizeof(struct version));
+	struct version* tmp = (struct version*)malloc(sizeof(struct version));
 	tmp->get_release = this_get_release;
 	tmp->get_major = this_get_major;
 	tmp->get_minor = this_get_minor;

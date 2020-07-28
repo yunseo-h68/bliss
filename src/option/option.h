@@ -14,7 +14,7 @@ struct option {
 			struct option* this, const char* description);
 	struct option* (*set_exec_func)(
 			struct option* this, void (*option_exec_func)(void));
-}
+};
 
 struct option* new_option(const char* name);
 void delete_option(struct option* option_info);

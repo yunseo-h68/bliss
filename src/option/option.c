@@ -72,7 +72,7 @@ static struct option* this_set_exec_func(
 
 struct option* new_option(const char* name)
 {
-	struct option* tmp = (struct *option)malloc(sizeof(struct option));
+	struct option* tmp = (struct option*)malloc(sizeof(struct option));
 	strcpy(tmp->name, name);
 	tmp->exec = this_exec;
 	tmp->get_name = this_get_name;

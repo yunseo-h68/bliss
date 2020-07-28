@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string.h>
 #include "../option/option.h"
 
@@ -54,7 +55,7 @@ static struct option* this_get_option(struct command* this, const char* option_n
 	int i;
 
 	for (i = 0; i < this->options_count; i++) {
-		if (!strcmp(this->options[i]->name, subcommand_name))
+		if (!strcmp(this->options[i]->get_name(this->options[i]), option_name))
 			return this->options[i];
 	}
 
@@ -65,7 +66,7 @@ static struct command* this_get_subcommand(struct command* this, const char* sub
 {
 	int i;
 
-	for (i = 0; i < subcommands_count; i++) {
+	for (i = 0; i < this->subcommands_count; i++) {
 		if (!strcmp(this->subcommands[i]->name, subcommand_name))
 			return this->subcommands[i];
 	}
@@ -96,7 +97,7 @@ static struct command* this_set_usage(struct command* this, const char* usage)
 
 static struct command* this_add_subcommand(struct command* this, struct command* subcommand)
 {
-	if (this->subcommands[this->subcommands_count]->is_command != 1) {
+	if (this->subcommands[this->subcommands_count]->is_subcommand != 1) {
 		this->subcommands[this->subcommands_count] = subcommand;
 		this->subcommands[this->subcommands_count]->is_subcommand = 1;
 		(this->subcommands_count)++;
@@ -120,7 +121,7 @@ static struct command* this_delete_subcommand(struct command* this, const char* 
 	return this;
 }
 
-static struct command* this_add_option(struct command* this, struct* option_info)
+static struct command* this_add_option(struct command* this, struct option* option_info)
 {
 	this->options[this->options_count] = option_info;
 	(this->options_count)++;
@@ -132,7 +133,7 @@ static struct command* this_delete_option(struct command* this, const char* opti
 	int i ;
 
 	for (i = 0; i < this->options_count; i++) {
-		if (!strcmp(this->options[i]->name, option_name)) {
+		if (!strcmp(this->options[i]->get_name(this->options[i]), option_name)) {
 			delete_option(this->options[i]);
 			break;
 		}
@@ -143,7 +144,7 @@ static struct command* this_delete_option(struct command* this, const char* opti
 
 struct command* new_command(const char* name)
 {
-	struct command* tmp = (struct *command)malloc(sizeof(struct command));
+	struct command* tmp = (struct command*)malloc(sizeof(struct command));
 	tmp->is_subcommand = 0;
 	strcpy(tmp->name, name);
 	tmp->exec = this_exec;
@@ -159,7 +160,7 @@ struct command* new_command(const char* name)
 	tmp->delete_subcommand = this_delete_subcommand;
 	tmp->add_option = this_add_option;
 	tmp->delete_option = this_delete_option;
-	return this;
+	return tmp;
 }
 
 void delete_command(struct command* command_info)
