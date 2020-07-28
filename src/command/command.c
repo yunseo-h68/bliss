@@ -50,6 +50,21 @@ static char* this_get_usage(struct command* this)
 	return this->usage;
 }
 
+static int this_get_options_count(struct command* this)
+{
+	return this->options_count;
+}
+
+static int this_get_subcommands_count(struct command* this)
+{
+	return this->subcommands_count;
+}
+
+static struct option* this_get_option_by_index(struct command* this, int index)
+{
+	return this->options[index];
+}
+
 static struct option* this_get_option(struct command* this, const char* option_name)
 {
 	int i;
@@ -60,6 +75,11 @@ static struct option* this_get_option(struct command* this, const char* option_n
 	}
 
 	return NULL;
+}
+
+static struct command* this_get_subcommand_by_index(struct command* this, int index)
+{
+	return this->subcommands[index];
 }
 
 static struct command* this_get_subcommand(struct command* this, const char* subcommand_name)

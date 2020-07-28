@@ -6,7 +6,11 @@ struct command {
 	char* (*get_name)(struct command* this);
 	char* (*get_description)(struct command* this);
 	char* (*get_usage)(struct command* this);
+	int (*get_options_count)(struct command* this);
+	int (*get_subcommands_count)(struct command* this);
+	struct option* (*get_option_by_index)(struct command* this, int index);
 	struct option* (*get_option)(struct command* this, const char* option_name);
+	struct command* (*get_subcommand_by_index)(struct command* this, int index);
 	struct command* (*get_subcommand)(struct command* this, const char* subcommand_name);
 	struct command* (*set_name)(struct command* this, const char* name);
 	struct command* (*set_description)(struct command* this, const char* description);
