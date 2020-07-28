@@ -19,7 +19,11 @@ struct command {
 	char* (*get_name)(struct command* this);
 	char* (*get_description)(struct command* this);
 	char* (*get_usage)(struct command* this);
+	int (*get_options_count)(struct command* this);
+	int (*get_subcommands_count)(struct command* this);
+	struct option* (*get_option_by_index)(struct command* this, int index);
 	struct option* (*get_option)(struct command* this, const char* option_name);
+	struct command* (*get_subcommand_by_index)(struct command* this, int index);
 	struct command* (*get_subcommand)(struct command* this, const char* subcommand_name);
 	struct command* (*set_name)(struct command* this, const char* name);
 	struct command* (*set_description)(struct command* this, const char* description);
@@ -171,7 +175,12 @@ struct command* new_command(const char* name)
 	tmp->get_name = this_get_name;
 	tmp->get_description = this_get_description;
 	tmp->get_usage = this_get_usage;
+
+	tmp->get_options_count = this_get_options_count;
+	tmp->get_subcommands_count = this_get_subcommands_count;
+	tmp->get_option_by_index = this_get_option_by_index;
 	tmp->get_option = this_get_option;
+	tmp->get_subcommand_by_index = this_get_subcommand_by_index;
 	tmp->get_subcommand = this_get_subcommand;
 	tmp->set_name = this_set_name;
 	tmp->set_description = this_set_description;
