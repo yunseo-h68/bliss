@@ -23,47 +23,47 @@ struct option {
 			struct option* this, void (*option_exec_func)(void));
 };
 
-static void exec(struct option* this)
+static void this_exec(struct option* this)
 {
 	this->exec_func();
 }
 
-static char* get_name(struct option* this)
+static char* this_get_name(struct option* this)
 {
 	return this->name;
 }
 
-static char* get_name_short(struct option* this)
+static char* this_get_name_short(struct option* this)
 {
 	return this->name_short;
 }
 
-static char* get_description(struct option* this)
+static char* this_get_description(struct option* this)
 {
 	return this->description;
 }
 
-static struct option* set_name(struct option* this, const char* name)
+static struct option* this_set_name(struct option* this, const char* name)
 {
 	strcpy(this->name, name);
 	return this;
 }
 
-static struct option* set_name_short(
+static struct option* this_set_name_short(
 		struct option* this, const char* name_short)
 {
 	strcpy(this->name_short, name_short);
 	return this;
 }
 
-static struct option* set_description(
+static struct option* this_set_description(
 		struct option* this, const char* description)
 {
 	strcpy(this->description, description);
 	return this;
 }
 
-static struct option* set_exec_func(
+static struct option* this_set_exec_func(
 		struct option* this, void (*exec_func)(void))
 {
 	this->exec_func = exec_func;
@@ -74,14 +74,14 @@ struct option* new_option(const char* name)
 {
 	struct option* tmp = (struct *option)malloc(sizeof(struct option));
 	strcpy(tmp->name, name);
-	tmp->exec = exec;
-	tmp->get_name = get_name;
-	tmp->get_name_short = get_name_short;
-	tmp->get_description = get_description;
-	tmp->set_name = set_name;
-	tmp->set_name_short = set_name_short;
-	tmp->set_description = set_description;
-	tmp->set_exec_func = set_exec_func;
+	tmp->exec = this_exec;
+	tmp->get_name = this_get_name;
+	tmp->get_name_short = this_get_name_short;
+	tmp->get_description = this_get_description;
+	tmp->set_name = this_set_name;
+	tmp->set_name_short = this_set_name_short;
+	tmp->set_description = this_set_description;
+	tmp->set_exec_func = this_set_exec_func;
 	return tmp;
 }
 
