@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "../option/option.h"
@@ -13,7 +14,7 @@ struct command {
 	char usage[COMMAND_STR_SIZE];
 	struct command** subcommands;
 	struct option** options;
-	void (*exec_func)(void);
+	void (*exec_func)(struct command* this);
 
 	void (*exec)(struct command* this);
 	char* (*get_name)(struct command* this);
@@ -28,15 +29,19 @@ struct command {
 	struct command* (*set_name)(struct command* this, const char* name);
 	struct command* (*set_description)(struct command* this, const char* description);
 	struct command* (*set_usage)(struct command* this, const char* usage);
+	struct command* (*set_exec_func)(
+			struct command* this, 
+			void (*command_exec_func)(struct command* this));
 	struct command* (*add_subcommand)(struct command* this, struct command* subcommand);
 	struct command* (*delete_subcommand)(struct command* this, const char* subcommand_name);
 	struct command* (*add_option)(struct command* this, struct option* option_info);
 	struct command* (*delete_option)(struct command* this, const char* option_name);
+	void (*print_help)(struct command* this);
 };
 
 static void this_exec(struct command* this)
 {
-	this->exec_func();
+	this->exec_func(this);
 }
 
 static char* this_get_name(struct command* this)
@@ -119,6 +124,14 @@ static struct command* this_set_usage(struct command* this, const char* usage)
 	return this;
 }
 
+static struct command* this_set_exec_func(
+		struct command* this, 
+		void (*command_exec_func)(struct command* this))
+{
+	this->exec_func = command_exec_func;
+	return this;
+}
+
 static struct command* this_add_subcommand(struct command* this, struct command* subcommand)
 {
 	if (this->subcommands[this->subcommands_count]->is_subcommand != 1) {
@@ -166,6 +179,34 @@ static struct command* this_delete_option(struct command* this, const char* opti
 	return this;
 }
 
+static void this_print_help(struct command* this)
+{
+	int i;
+	struct option* option_tmp;
+	struct command* subcommand_tmp;
+
+	printf("%s | %s\n\n", this->name, this->description);
+	printf("Usage:\n\t%s\n\n", this->usage);
+	printf("Options:\n");
+	for (i = 0; i < this->options_count; i++) {
+		option_tmp = this_get_option_by_index(this, i);
+		printf("\t-%s --%s : %s\n", 
+				option_tmp->get_name_short(option_tmp),
+				option_tmp->get_name(option_tmp),
+				option_tmp->get_description(option_tmp));
+	}
+	if (!(this->is_subcommand)) {
+		printf("\nSubcommands:\n");
+		for (i = 0; i < this->subcommands_count; i++) {
+			subcommand_tmp = this_get_subcommand_by_index(this, i);
+			printf("\t%s : %s\n",
+					subcommand_tmp->name,
+					subcommand_tmp->description);
+		}
+	}
+}
+
+
 struct command* new_command(const char* name)
 {
 	struct command* tmp = (struct command*)malloc(sizeof(struct command));
@@ -189,6 +230,9 @@ struct command* new_command(const char* name)
 	tmp->delete_subcommand = this_delete_subcommand;
 	tmp->add_option = this_add_option;
 	tmp->delete_option = this_delete_option;
+	tmp->print_help = this_print_help;
+
+	tmp->exec_func = this_print_help;
 	return tmp;
 }
 

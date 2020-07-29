@@ -15,10 +15,14 @@ struct command {
 	struct command* (*set_name)(struct command* this, const char* name);
 	struct command* (*set_description)(struct command* this, const char* description);
 	struct command* (*set_usage)(struct command* this, const char* usage);
+	struct command* (*set_exec_func)(
+			struct command* this, 
+			void (*command_exec_func)(struct command* this));
 	struct command* (*add_subcommand)(struct command* this, struct command subcommand);
 	struct command* (*delete_subcommand)(struct command* this, const char* subcommand_name);
 	struct command* (*add_option)(struct command* this, struct option option_info);
 	struct command* (*delete_option)(struct command* this, const char* option_name);
+    struct command* (*print_help)(struct command* this);
 };
 
 struct  command* new_command(const char* name);
