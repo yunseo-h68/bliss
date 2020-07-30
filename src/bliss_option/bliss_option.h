@@ -2,6 +2,7 @@
 #define BLISS_BLISS_OPTION_H
 
 struct bliss_option {
+	struct option* (*get_option)(struct bliss_option* this);
 	struct bliss_option* (*set_name)(struct bliss_option* this, const char* name);
 	struct bliss_option* (*set_name_short)(struct bliss_option* this, const char* name_short);
 	struct bliss_optoin* (*set_description)(struct bliss_option* this, const char* description);

@@ -13,5 +13,5 @@ struct bliss_app {
 };
 
 struct bliss_app* new_bliss_app(const char* name);
-
+void delete_bliss_app(struct bliss_app* bliss_app_info);
 #endif

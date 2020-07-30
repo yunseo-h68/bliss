@@ -4,6 +4,7 @@
 struct bliss_option {
 	struct option* this_option;
 
+	struct option* (*get_option)(struct bliss_option* this);
 	struct bliss_option* (*set_name)(struct bliss_option* this, const char* name);
 	struct bliss_option* (*set_name_short)(struct bliss_option* this, const char* name_short);
 	struct bliss_option* (*set_description)(struct bliss_option* this, const char* description);
@@ -11,6 +12,11 @@ struct bliss_option {
 			struct bliss_option* this,
 			void (*option_exec_func)(void));
 };
+
+static struct option* this_get_option(struct bliss_option* this)
+{
+	return this->this_option;
+}
 
 static struct bliss_option* this_set_name(struct bliss_option* this, const char* name)
 {
@@ -39,6 +45,7 @@ static struct bliss_option* this_set_exec_func(struct bliss_option* this, void (
 struct bliss_option* new_bliss_option(const char* name)
 {
 	struct bliss_option* tmp = (struct bliss_option*)malloc(sizeof(struct bliss_option));
+	tmp->get_option = this_get_option;
 	tmp->set_name = this_set_name;
 	tmp->set_name_short = this_set_name_short;
 	tmp->set_description = this_set_description;
