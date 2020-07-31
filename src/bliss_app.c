@@ -41,7 +41,7 @@ static int this_exec(struct bliss_app* this, int argc, char* argv[])
 	for (i = 0; i < argc; i++) {
 		if (argv[i][0] == '-') {
 			parse_option_name(argv[i], option_name_tmp);
-			option_tmp = this->this_command->get_option(this->command, option_name_tmp);
+			option_tmp = this->this_command->get_option(this->this_command, option_name_tmp);
 			if (option_tmp != NULL) {
 				option_tmp->exec(option_tmp);
 			}
