@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "command/command.h"
+#include "option/option.h"
 #include "bliss_option/bliss_option.h"
 #include "bliss_version/bliss_version.h"
 
@@ -9,7 +10,7 @@ struct bliss_app {
 	struct command* this_command;
 	struct bliss_version* this_version;
 
-	void (*exec)(struct bliss_app* this);
+	int (*exec)(struct bliss_app* this, int argc, char* argv[]);
 	void (*print_help)(struct bliss_app* this);
 	char* (*get_name)(struct bliss_app* this);
 	char* (*get_description)(struct bliss_app* this);
@@ -20,9 +21,41 @@ struct bliss_app {
 	struct bliss_app* (*add_option)(struct bliss_app* this, struct bliss_option* option);
 };
 
-static int this_exec(int argc, char* argv[])
+static char* parse_option_name(const char* string, char* name)
 {
+	int i = 0, j = 0;
+	while(string[i++] == '-');
+	for(j = 0; string[i+j] != NULL; j++) {
+		name[j] = string[i+j];
+	}
+	name[j] = NULL;
+}
 
+static int this_exec(struct bliss_app* this, int argc, char* argv[])
+{
+	int i, j;
+	char option_name_tmp[OPTION_STR_SIZE];
+	struct option* option_tmp = NULL;
+	struct command* subcommand_tmp = NULL;
+
+	for (i = 0; i < argc; i++) {
+		if (argv[i][0] == '-') {
+			parse_option_name(argv[i], option_name_tmp);
+			option_tmp = this->this_command->get_option(this->command, option_name_tmp);
+			if (option_tmp != NULL) {
+				option_tmp->exec(option_tmp);
+			}
+		} else {
+			subcommand_tmp = this->this_command->get_subcommand(this->this_command, argv[i]);
+			if (subcommand_tmp != NULL) {
+				subcommand_tmp -> exec(subcommand_tmp);
+			} else if (i == argc -1) {
+				printf("%s is not found\n", argv[i]);
+				return 0;
+			}
+			break;
+		}
+	}
 }
 
 static void this_print_help(struct bliss_app* this)
@@ -82,6 +115,7 @@ struct bliss_app* new_bliss_app(const char* name)
 		->set_description(help_option, "Display this information");
 
 	this_add_option(tmp, help_option);
+	tmp->exec = this_exec;
 	tmp->print_help = this_print_help;
 	tmp->get_name = this_get_name;
 	tmp->get_description = this_get_description;

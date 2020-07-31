@@ -1,6 +1,8 @@
 #ifndef BLISS_OPTION_H
 #define BLISS_OPTION_H
 
+#define OPTION_STR_SIZE 256
+
 struct option {
 	void (*exec)(struct option* this);
 	char* (*get_name)(struct option* this);

@@ -2,6 +2,7 @@
 #define BLISS_H
 
 struct bliss_app {
+	int (*exec)(struct bliss_app* this, int argc, char* argv[]);
 	void (*print_help)(struct bliss_app* this);
 	char* (*get_name)(struct bliss_app* this);
 	char* (*get_description)(struct bliss_app* this);
