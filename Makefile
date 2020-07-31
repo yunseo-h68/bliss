@@ -10,7 +10,7 @@ LINK_LIBS         = -lm
 EXAMPLE_TARGET    = bin/example
 EXAMPLE_DIR       = example
 
-$(LIB_TARGET):$(SRC_DIR)/$(SRCS) $(SRC_DIR)/*/$(SRCS)
+$(LIB_TARGET):$(SRC_DIR)/$(SRCS) $(SRC_DIR)/*/$(SRCS) $(SRC_DIR)/*/*/$(SRCS)
 	$(CC) -fPIC -c $^ $(LINK_LIBS)
 	$(CC) -shared -Wl,-soname,$(LIB_DIR)/$(LIB_TARGET).so.$(LIB_VERSION_MAJOR) -o $(LIB_DIR)/$(LIB_TARGET).so.$(LIB_VERSION) $(OBJS)
 

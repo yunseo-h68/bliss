@@ -34,8 +34,8 @@ void add_version_option()
 
 void add_hello_subcommand()
 {
-	struct bliss_app* hello_subcommand = new_bliss_app("hello");
-	my_app->add_subcommand(my_app, hello_subcommand);
+	//struct bliss_app* hello_subcommand = new_bliss_app("hello");
+	//my_app->add_subcommand(my_app, hello_subcommand);
 }
 
 int main(int argc, char* argv[]) {
