@@ -1,6 +1,6 @@
 # Bliss
 
-A library for parsing command line argument
+A library to make cli program easy
 
 ## Build and Run
 
