@@ -146,7 +146,12 @@ struct version* new_version()
 
 void delete_version(struct version* version_info)
 {
-	if (strlen(version_info->str) > 0)
+	if (strlen(version_info->str) > 0 && version_info->str != NULL) {
 		free(version_info->str);
-	free(version_info);
+		version_info->str = NULL;
+	}
+	if (version_info != NULL) {
+		free(version_info);
+		version_info = NULL;
+	}
 }

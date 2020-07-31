@@ -88,4 +88,5 @@ struct option* new_option(const char* name)
 void delete_option(struct option* option_info)
 {
 	free(option_info);
+	option_info = NULL;
 }

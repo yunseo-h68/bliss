@@ -56,6 +56,10 @@ struct bliss_option* new_bliss_option(const char* name)
 
 void delete_bliss_option(struct bliss_option* bliss_option_info)
 {
-	delete_option(bliss_option_info->this_option);
+	if (bliss_option_info == NULL) return;
+	if (bliss_option_info->this_option != NULL) {
+		delete_option(bliss_option_info->this_option);
+	}
 	free(bliss_option_info);
+	bliss_option_info = NULL;
 }

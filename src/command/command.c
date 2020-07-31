@@ -79,8 +79,12 @@ static struct option* this_get_option(struct command* this, const char* option_n
 	int i;
 
 	for (i = 0; i < this->options_count; i++) {
-		if (!strcmp(this->options[i]->get_name(this->options[i]), option_name))
+		if (
+				!strcmp(this->options[i]->get_name(this->options[i]), option_name) ||
+				!strcmp(this->options[i]->get_name_short(this->options[i]), option_name)
+			) {
 			return this->options[i];
+		}
 	}
 
 	return NULL;
@@ -160,9 +164,12 @@ static struct command* this_delete_subcommand(struct command* this, const char* 
 
 static struct command* this_add_option(struct command* this, struct option* option_info)
 {
+	if (this_get_option(this, option_info->get_name(option_info)) == NULL) {
 	this->options[this->options_count] = option_info;
 	(this->options_count)++;
 	return this;
+	}
+	return NULL;
 }
 
 static struct command* this_delete_option(struct command* this, const char* option_name)
@@ -170,7 +177,10 @@ static struct command* this_delete_option(struct command* this, const char* opti
 	int i ;
 
 	for (i = 0; i < this->options_count; i++) {
-		if (!strcmp(this->options[i]->get_name(this->options[i]), option_name)) {
+		if (
+				!strcmp(this->options[i]->get_name(this->options[i]), option_name) ||
+				!strcmp(this->options[i]->get_name_short(this->options[i]), option_name)
+			) {
 			delete_option(this->options[i]);
 			break;
 		}
@@ -239,14 +249,25 @@ struct command* new_command(const char* name)
 void delete_command(struct command* command_info)
 {
 	int i, j;
+
+	if (command_info == NULL) return;
+
 	for (i = 0; i < command_info->options_count; i++) {
-		delete_option(command_info->options[i]);
+		if (command_info->options[i] != NULL) {
+			delete_option(command_info->options[i]);
+		}
 	}
 	for (i = 0; i < command_info->subcommands_count; i++) {
 		for (j = 0; j < command_info->subcommands[i]->options_count; j++) {
-			delete_option(command_info->subcommands[i]->options[j]);
+			if (command_info->subcommands[i]->options[j] != NULL) {
+				delete_option(command_info->subcommands[i]->options[j]);
+			}
 		}
-		free(command_info->subcommands[i]);
+		if (command_info->subcommands[i] != NULL) {
+			free(command_info->subcommands[i]);
+			command_info->subcommands[i] = NULL;
+		}
 	}
 	free(command_info);
+	command_info = NULL;
 }

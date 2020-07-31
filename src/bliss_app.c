@@ -20,6 +20,11 @@ struct bliss_app {
 	struct bliss_app* (*add_option)(struct bliss_app* this, struct bliss_option* option);
 };
 
+static int this_exec(int argc, char* argv[])
+{
+
+}
+
 static void this_print_help(struct bliss_app* this)
 {
 	this->this_command->print_help(this->this_command);
@@ -91,7 +96,12 @@ struct bliss_app* new_bliss_app(const char* name)
 
 void delete_bliss_app(struct bliss_app* bliss_app_info)
 {
-	delete_command(bliss_app_info->this_command);
-	delete_bliss_version(bliss_app_info->this_version);
+	if (bliss_app_info == NULL) return;
+	if (bliss_app_info->this_command != NULL) {
+		delete_command(bliss_app_info->this_command);
+	}
+	if (bliss_app_info->this_version != NULL) {
+		delete_bliss_version(bliss_app_info->this_version);
+	}
 	free(bliss_app_info);
 }

@@ -54,6 +54,9 @@ struct bliss_version* new_bliss_version(const char* version_string)
 
 void delete_bliss_version(struct bliss_version* bliss_version_info)
 {
-	delete_version(bliss_version_info->this_version);
+	if (bliss_version_info->this_version != NULL) {
+		delete_version(bliss_version_info->this_version);
+	}
 	free(bliss_version_info);
+	bliss_version_info = NULL;
 }
