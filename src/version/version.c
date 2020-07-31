@@ -5,11 +5,6 @@
 #include "../util/util.h"
 
 struct version {
-	int release;
-	int major;
-	int minor;
-	char* str;
-
 	int (*get_release)(struct version* this);
 	int (*get_major)(struct version* this);
 	int (*get_minor)(struct version* this);
@@ -21,6 +16,11 @@ struct version {
 	struct version* (*up_release)(struct version* this);
 	struct version* (*up_major)(struct version* this);
 	struct version* (*up_minor)(struct version* this);
+	
+	int release;
+	int major;
+	int minor;
+	char* str;
 };
 
 static int version_parse_number(int* version_num, const char* version_str, int start, int finish)
@@ -130,6 +130,7 @@ static struct version* this_up_minor(struct version* this)
 struct version* new_version()
 {
 	struct version* tmp = (struct version*)malloc(sizeof(struct version));
+	tmp->str = NULL;
 	tmp->get_release = this_get_release;
 	tmp->get_major = this_get_major;
 	tmp->get_minor = this_get_minor;
@@ -146,12 +147,12 @@ struct version* new_version()
 
 void delete_version(struct version* version_info)
 {
-	if (strlen(version_info->str) > 0 && version_info->str != NULL) {
+	if (version_info == NULL) return;
+	if (version_info->str != NULL && strlen(version_info->str) > 0) {
 		free(version_info->str);
 		version_info->str = NULL;
 	}
-	if (version_info != NULL) {
-		free(version_info);
-		version_info = NULL;
-	}
+
+	free(version_info);
+	version_info = NULL;
 }

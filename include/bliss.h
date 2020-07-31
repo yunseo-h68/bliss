@@ -23,9 +23,21 @@ struct bliss_app {
 	char* (*get_description)(struct bliss_app* this);
 	char* (*get_usage)(struct bliss_app* this);
 	struct bliss_version* (*get_version)(struct bliss_app* this);
+	struct bliss_app* (*set_name)(
+			struct bliss_app* this,
+			const char* name);
+	struct bliss_app* (*set_description)(
+			struct bliss_app* this,
+			const char* description);
+	struct bliss_app* (*set_usage)(
+			struct bliss_app* this,
+			const char* usage);
 	struct bliss_app* (*set_version)(
 			struct bliss_app* this, 
 			const char* version_string);
+	struct bliss_app* (*set_subcommand_exec)(
+			struct bliss_app* this,
+			void (*subcommand_exec_func)(void));
 	struct bliss_app* (*add_subcommand)(
 			struct bliss_app* this,
 			struct bliss_app* subcommand);
@@ -33,6 +45,8 @@ struct bliss_app {
 			struct bliss_app* this,
 			struct bliss_option* option);
 };
+
+void this_print_help(struct bliss_app* this);
 
 struct bliss_version {
 	char* (*to_string)(struct bliss_version* this);

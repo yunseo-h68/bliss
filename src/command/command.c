@@ -6,16 +6,6 @@
 #define COMMAND_STR_SIZE 256
 
 struct command {
-	int is_subcommand;
-	int subcommands_count;
-	int options_count;
-	char name[COMMAND_STR_SIZE];
-	char description[COMMAND_STR_SIZE];
-	char usage[COMMAND_STR_SIZE];
-	struct command** subcommands;
-	struct option** options;
-	void (*exec_func)(struct command* this);
-
 	void (*exec)(struct command* this);
 	char* (*get_name)(struct command* this);
 	char* (*get_description)(struct command* this);
@@ -36,7 +26,17 @@ struct command {
 	struct command* (*delete_subcommand)(struct command* this, const char* subcommand_name);
 	struct command* (*add_option)(struct command* this, struct option* option_info);
 	struct command* (*delete_option)(struct command* this, const char* option_name);
-	void (*print_help)(struct command* this);
+	void (*print_help)(struct command* this);	
+	
+	int is_subcommand;
+	int subcommands_count;
+	int options_count;
+	char name[COMMAND_STR_SIZE];
+	char description[COMMAND_STR_SIZE];
+	char usage[COMMAND_STR_SIZE];
+	struct command** subcommands;
+	struct option** options;
+	void (*exec_func)(struct command* this);
 };
 
 static void this_exec(struct command* this)
@@ -77,7 +77,8 @@ static struct option* this_get_option_by_index(struct command* this, int index)
 static struct option* this_get_option(struct command* this, const char* option_name)
 {
 	int i;
-
+	
+	if (this->options_count == 0) return NULL;
 	for (i = 0; i < this->options_count; i++) {
 		if (
 				!strcmp(this->options[i]->get_name(this->options[i]), option_name) ||
@@ -139,6 +140,13 @@ static struct command* this_set_exec_func(
 static struct command* this_add_subcommand(struct command* this, struct command* subcommand)
 {
 	if (this->subcommands[this->subcommands_count]->is_subcommand != 1) {
+		if (this->subcommands == NULL) {
+			this->subcommands = (struct command**)malloc(sizeof(struct command));
+		} else {
+			this->subcommands = (struct command**)realloc(
+					this->subcommands,
+					sizeof(struct command) * (this->subcommands_count + 1));
+		}
 		this->subcommands[this->subcommands_count] = subcommand;
 		this->subcommands[this->subcommands_count]->is_subcommand = 1;
 		(this->subcommands_count)++;
@@ -165,9 +173,16 @@ static struct command* this_delete_subcommand(struct command* this, const char* 
 static struct command* this_add_option(struct command* this, struct option* option_info)
 {
 	if (this_get_option(this, option_info->get_name(option_info)) == NULL) {
-	this->options[this->options_count] = option_info;
-	(this->options_count)++;
-	return this;
+		if (this->options == NULL) {
+			this->options = (struct option**)malloc(sizeof(struct option));
+		} else {
+			this->options = (struct option**)realloc(
+					this->options,
+					sizeof(struct option) * (this->options_count + 1));
+		}
+		this->options[this->options_count] = option_info;
+		(this->options_count)++;
+		return this;
 	}
 	return NULL;
 }
@@ -195,25 +210,45 @@ static void this_print_help(struct command* this)
 	struct option* option_tmp;
 	struct command* subcommand_tmp;
 
-	printf("%s | %s\n\n", this->name, this->description);
-	printf("Usage:\n\t%s\n\n", this->usage);
-	printf("Options:\n");
-	for (i = 0; i < this->options_count; i++) {
-		option_tmp = this_get_option_by_index(this, i);
-		printf("\t-%s --%s : %s\n", 
-				option_tmp->get_name_short(option_tmp),
-				option_tmp->get_name(option_tmp),
-				option_tmp->get_description(option_tmp));
-	}
-	if (!(this->is_subcommand)) {
-		printf("\nSubcommands:\n");
-		for (i = 0; i < this->subcommands_count; i++) {
-			subcommand_tmp = this_get_subcommand_by_index(this, i);
-			printf("\t%s : %s\n",
-					subcommand_tmp->name,
-					subcommand_tmp->description);
+	if (strlen(this->name) > 0) printf("%s", this->name);
+	if (strlen(this->description)>0) printf(" | %s", this->description);
+	printf("\n\n");
+
+	if (strlen(this->usage) > 0) printf("Usage:\n\t%s\n\n", this->usage);
+	
+	if (this->options_count > 0) {
+		printf("Options:\n");
+		for (i = 0; i < this->options_count; i++) {
+			option_tmp = this_get_option_by_index(this, i);
+			printf("\t");
+			if (strlen(option_tmp->get_name_short(option_tmp)) > 0) {
+				printf("-%s ", option_tmp -> get_name_short(option_tmp));
+			}
+			if (strlen(option_tmp->get_name(option_tmp)) > 0) {
+				printf("--%s ", option_tmp->get_name(option_tmp));
+			}
+			if (strlen(option_tmp->get_description(option_tmp)) > 0) {
+				printf(": %s", option_tmp->get_description(option_tmp));
+			}
+			printf("\n");
 		}
 	}
+	if (!(this->is_subcommand)) {
+		if (this->subcommands_count > 0) {
+			printf("\nSubcommands:\n");
+			for (i = 0; i < this->subcommands_count; i++) {
+				subcommand_tmp = this_get_subcommand_by_index(this, i);
+				if (strlen(subcommand_tmp->name) > 0) {
+					printf("%s ", subcommand_tmp->name);
+				}
+				if (strlen(subcommand_tmp->description) > 0) {
+					printf(": %s", subcommand_tmp->description);
+				}
+				printf("\n");
+			}
+		}
+	}
+	
 }
 
 
@@ -221,6 +256,10 @@ struct command* new_command(const char* name)
 {
 	struct command* tmp = (struct command*)malloc(sizeof(struct command));
 	tmp->is_subcommand = 0;
+	tmp->subcommands_count = 0;
+	tmp->options_count = 0;
+	tmp->options = NULL;
+
 	strcpy(tmp->name, name);
 	tmp->exec = this_exec;
 	tmp->get_name = this_get_name;
@@ -257,16 +296,28 @@ void delete_command(struct command* command_info)
 			delete_option(command_info->options[i]);
 		}
 	}
+	if (command_info->options != NULL) {
+		free(command_info->options);
+		command_info->options = NULL;
+	}
 	for (i = 0; i < command_info->subcommands_count; i++) {
 		for (j = 0; j < command_info->subcommands[i]->options_count; j++) {
 			if (command_info->subcommands[i]->options[j] != NULL) {
 				delete_option(command_info->subcommands[i]->options[j]);
 			}
 		}
+		if (command_info->subcommands[i]->options != NULL) {
+			free(command_info->subcommands[i]->options);
+			command_info->subcommands[i]->options = NULL;
+		}
 		if (command_info->subcommands[i] != NULL) {
 			free(command_info->subcommands[i]);
 			command_info->subcommands[i] = NULL;
 		}
+	}
+	if (command_info->subcommands != NULL) {
+		free(command_info->subcommands);
+		command_info->subcommands = NULL;
 	}
 	free(command_info);
 	command_info = NULL;

@@ -5,42 +5,46 @@
 #include "../option/option.h"
 
 struct bliss_option {
-	struct option* this_option;
-
-	struct option* (*get_option)(struct bliss_option* this);
 	struct bliss_option* (*set_name)(struct bliss_option* this, const char* name);
 	struct bliss_option* (*set_name_short)(struct bliss_option* this, const char* name_short);
 	struct bliss_option* (*set_description)(struct bliss_option* this, const char* description);
 	struct bliss_option* (*set_exec_func)(
 			struct bliss_option* this,
 			void (*option_exec_func)(void));
+	struct option* (*get_option)(struct bliss_option* this);
+	struct option* this_option;
 };
 
 static struct option* this_get_option(struct bliss_option* this)
 {
+	if (this == NULL) return NULL;
 	return this->this_option;
 }
 
 static struct bliss_option* this_set_name(struct bliss_option* this, const char* name)
 {
+	if (this == NULL) return NULL;
 	this->this_option->set_name(this->this_option, name);
 	return this;
 }
 
 static struct bliss_option* this_set_name_short(struct bliss_option* this, const char* name_short)
 {
+	if (this == NULL) return NULL;
 	this->this_option->set_name_short(this->this_option, name_short);
 	return this;
 }
 
 static struct bliss_option* this_set_description(struct bliss_option* this, const char* description)
 {
+	if (this == NULL) return NULL;
 	this->this_option->set_description(this->this_option, description);
 	return this;
 }
 
 static struct bliss_option* this_set_exec_func(struct bliss_option* this, void (*option_exec_func)(void))
 {
+	if (this == NULL) return NULL;
 	this->this_option->set_exec_func(this->this_option, option_exec_func);
 	return this;
 }
@@ -54,8 +58,6 @@ struct bliss_option* new_bliss_option(const char* name)
 	tmp->set_description = this_set_description;
 	tmp->set_exec_func = this_set_exec_func;
 	tmp->this_option = new_option(name);
-	// test
-	//printf("%s\n", tmp->this_option->get_name(tmp->this_option));
 	return tmp;
 }
 
