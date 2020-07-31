@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -52,6 +54,7 @@ static struct option* this_set_name(struct option* this, const char* name)
 static struct option* this_set_name_short(
 		struct option* this, const char* name_short)
 {
+	printf("option-name-short:%s\n", name_short);
 	strcpy(this->name_short, name_short);
 	return this;
 }

@@ -1,3 +1,6 @@
+//test
+#include <stdio.h>
+
 #include <stdlib.h>
 #include "../option/option.h"
 
@@ -51,6 +54,8 @@ struct bliss_option* new_bliss_option(const char* name)
 	tmp->set_description = this_set_description;
 	tmp->set_exec_func = this_set_exec_func;
 	tmp->this_option = new_option(name);
+	// test
+	//printf("%s\n", tmp->this_option->get_name(tmp->this_option));
 	return tmp;
 }
 

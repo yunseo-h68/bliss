@@ -1,6 +1,21 @@
 #ifndef BLISS_H
 #define BLISS_H
 
+struct bliss_option {
+	struct bliss_option* (*set_name)(
+			struct bliss_option* this,
+			const char* name);
+	struct bliss_option* (*set_name_short)(
+			struct bliss_option* this,
+			const char* name_short);
+	struct bliss_option* (*set_description)(
+			struct bliss_option* this,
+			const char* description);
+	struct bliss_option* (*set_exec_func)(
+			struct bliss_option* this,
+			void (*option_exec_func)(void));
+};
+
 struct bliss_app {
 	int (*exec)(struct bliss_app* this, int argc, char* argv[]);
 	void (*print_help)(struct bliss_app* this);
@@ -17,21 +32,6 @@ struct bliss_app {
 	struct bliss_app* (*add_option)(
 			struct bliss_app* this,
 			struct bliss_option* option);
-};
-
-struct bliss_option {
-	struct bliss_option* (*set_name)(
-			struct bliss_option* this,
-			const char* name);
-	struct bliss_option* (*set_name_short)(
-			struct bliss_option* this,
-			const char* name_short);
-	struct bliss_option* (set_description)(
-			struct bliss_option* this,
-			const char* description);
-	struct bliss_option* (*set_exec_func)(
-			struct bliss_option* this,
-			void (*option_exec_func)(void));
 };
 
 struct bliss_version {

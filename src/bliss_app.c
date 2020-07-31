@@ -25,10 +25,10 @@ static char* parse_option_name(const char* string, char* name)
 {
 	int i = 0, j = 0;
 	while(string[i++] == '-');
-	for(j = 0; string[i+j] != NULL; j++) {
+	for(j = 0; string[i+j] != '\0'; j++) {
 		name[j] = string[i+j];
 	}
-	name[j] = NULL;
+	name[j] = '\0';
 }
 
 static int this_exec(struct bliss_app* this, int argc, char* argv[])
@@ -58,9 +58,10 @@ static int this_exec(struct bliss_app* this, int argc, char* argv[])
 	}
 }
 
-static void this_print_help(struct bliss_app* this)
+void this_print_help(struct bliss_app* this)
 {
-	this->this_command->print_help(this->this_command);
+	printf("PRINT HELP\n");
+	//this->this_command->print_help(this->this_command);
 }
 
 static char* this_get_name(struct bliss_app* this)
@@ -108,13 +109,7 @@ struct bliss_app* new_bliss_app(const char* name)
 	
 	tmp = (struct bliss_app*)malloc(sizeof(struct bliss_app));
 	tmp->this_command = new_command(name);
-
-	help_option = new_bliss_option("help");
-	help_option
-		->set_name_short(help_option, "h")
-		->set_description(help_option, "Display this information");
-
-	this_add_option(tmp, help_option);
+	
 	tmp->exec = this_exec;
 	tmp->print_help = this_print_help;
 	tmp->get_name = this_get_name;
@@ -125,6 +120,10 @@ struct bliss_app* new_bliss_app(const char* name)
 	tmp->add_subcommand = this_add_subcommand;
 	tmp->add_option = this_add_option;
 
+	help_option = new_bliss_option("help");
+	printf("tmp: %p\n", tmp);
+	printf("help: %p\n", this_print_help);
+	printf("help2: %p\n", tmp->print_help);
 	return tmp;
 }
 
