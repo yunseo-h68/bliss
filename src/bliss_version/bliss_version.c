@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "../version/version.h"
+#include "../core/version/version.h"
 
 struct bliss_version {
 	char* (*to_string)(struct bliss_version* this);

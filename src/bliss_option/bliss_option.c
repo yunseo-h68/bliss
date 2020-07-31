@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include <stdlib.h>
-#include "../option/option.h"
+#include "../core/option/option.h"
 
 struct bliss_option {
 	struct bliss_option* (*set_name)(struct bliss_option* this, const char* name);

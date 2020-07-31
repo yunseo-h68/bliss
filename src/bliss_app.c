@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "command/command.h"
-#include "option/option.h"
+#include "core/command/command.h"
+#include "core/option/option.h"
 #include "bliss_option/bliss_option.h"
 #include "bliss_version/bliss_version.h"
 
@@ -22,6 +22,7 @@ struct bliss_app {
 	struct bliss_app* (*set_subcommand_exec)(struct bliss_app* this, void (*subcommand_exec_func)(void));
 	struct bliss_app* (*add_subcommand)(struct bliss_app* this, struct bliss_app* subcommand);
 	struct bliss_app* (*add_option)(struct bliss_app* this, struct bliss_option* option);
+
 
 	struct command* this_command;
 	struct bliss_version* this_version;
