@@ -4,6 +4,8 @@
 #include "../bliss_option/bliss_option.h"
 #include "bliss_command.h"
 
+using namespace std;
+
 BlissCommand::BlissCommand(string name):options_count_(1) {
 	BlissExec::set_name(name);
 	options_ = new Bliss_option*[1];
@@ -38,7 +40,7 @@ BlissOption BlissCommand::GetOptionByName(string name) {
 	return NULL;
 }
 
-BlissCommand* AddOption(BlissOption* option) {
+BlissCommand* BlissCommand::AddOption(BlissOption* option) {
 	BlissOption** tmp = new BlissOption*[this->options_count];
 	memcpy(tmp, this->options_, sizeof(BlissOption*) * this->options_count);
 	

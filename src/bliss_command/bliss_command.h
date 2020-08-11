@@ -5,6 +5,8 @@
 #include "../bliss_exec/bliss_exec.h"
 #include "../bliss_option/bliss_option.h"
 
+using namespace std;
+
 class BlissCommand : BlissExec {
 	public:
 		BlissCommand(string name);

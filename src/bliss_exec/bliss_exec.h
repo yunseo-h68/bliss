@@ -2,6 +2,7 @@
 #define BLISS_BLISS_EXEC_H
 
 #include <string>
+using namespace std;
 
 class BlissExec {
 	public:
@@ -18,3 +19,5 @@ class BlissExec {
 		string name_;
 		string description_;
 };
+
+#endif

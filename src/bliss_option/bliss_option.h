@@ -4,6 +4,8 @@
 #include <string>
 #include "../bliss_exec/bliss_exec.h"
 
+using namespace std;
+
 class BlissOption : BlissExec {
 	public:
 		BlissOption();
