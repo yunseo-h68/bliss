@@ -8,11 +8,10 @@ class BlissExec {
 	public:
 		BlissExec();
 		~BlissExec();
-		void Init();
 		string name();
 		string description();
-		void set_name(string name);
-		void set_description(string description);
+		BlissExec* set_name(string name);
+		BlissExec* set_description(string description);
 
 		virtual void Exec(){}
 	private:
