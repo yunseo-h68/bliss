@@ -3,6 +3,6 @@
 
 #include "../include/bliss.hpp"
 
-BlissApp* ExampleApp();
+BlissApp* CreateApp();
 
 #endif

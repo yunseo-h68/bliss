@@ -2,6 +2,15 @@
 #include <string>
 #include "../include/bliss.hpp"
 
+class ExampleApp : public BlissApp {
+	public:
+		ExampleApp() {
+			BlissApp::set_name("exampleApp");
+			BlissApp::set_description("example of bliss");
+			BlissApp::set_usage("exampleApp [OPTIONS] [SUBCOMMANDS]");
+		}
+};
+
 class SubHello : public BlissCommand {
 	public:
 		SubHello() {
@@ -27,15 +36,13 @@ class OptionHello : public BlissOption {
 		}
 };
 
-BlissApp* ExampleApp() {
-	BlissApp* exampleApp = new BlissApp("exampleApp");
+BlissApp* CreateApp() {
+	ExampleApp* app = new ExampleApp;
 	SubHello* subHello = new SubHello; 
 	OptionHello* optionHello = new OptionHello;
 	
-	exampleApp->set_description("example of bliss")
-		      ->set_usage("exampleApp [OPTIONS] [SUBCOMMANDS]")
-			  ->AddSubcommand(subHello)
-			  ->AddOption(optionHello);
+	app->AddSubcommand(subHello)
+		->AddOption(optionHello);
 
-	return exampleApp;
+	return app;
 }
