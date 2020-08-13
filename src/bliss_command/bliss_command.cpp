@@ -1,15 +1,12 @@
-#include <string>
 #include <cstring>
-#include "../bliss_exec/bliss_exec.h"
-#include "../bliss_option/bliss_option.h"
 #include "bliss_command.h"
 
-using namespace std;
+BlissCommand::BlissCommand():BlissCommand("") {
+}
 
-BlissCommand::BlissCommand(string name):options_count_(1) {
-	BlissExec::set_name(name);
+BlissCommand::BlissCommand(std::string name):options_count_(0) {
+	set_name(name);
 	options_ = new BlissOption*[1];
-	options_count_ = 0;
 }
 
 BlissCommand::~BlissCommand() {
@@ -27,16 +24,40 @@ int BlissCommand::options_count() {
 	return options_count_;
 }
 
+BlissCommand* BlissCommand::set_name(std::string name) {
+	set_name(name);
+	return this;
+}
+
+BlissCommand* BlissCommand::set_description(std::string description) {
+	set_description(description);
+	return this;
+}
+
+BlissCommand* BlissCommand::set_usage(std::string usage) {
+	usage_ = usage;
+	return this;
+}
+
 BlissOption* BlissCommand::GetOptionByIndex(int index) {
-	if (index < 0 || index > options_count_) {
+	if (index < 0 || index >= options_count_) {
 		return NULL;
 	}
 	return options_[index];
 }
 
-BlissOption* BlissCommand::GetOptionByName(string name) {
+BlissOption* BlissCommand::GetOptionByName(std::string name) {
 	for (int i = 0; i < options_count_; i++) {
-		if (name == options_[i]->name() || name == options_[i]->name_short()) {
+		if (name == options_[i]->name()) {
+			return options_[i];
+		}
+	}
+	return NULL;
+}
+
+BlissOption* BlissCommand::GetOptionByNameShort(std::string name_short) {
+	for (int i = 0; i < options_count_; i++) {
+		if (name_short == options_[i]->name_short()) {
 			return options_[i];
 		}
 	}
@@ -51,18 +72,18 @@ BlissCommand* BlissCommand::AddOption(BlissOption* option) {
 	options_count_++;
 	
 	options_ = new BlissOption*[options_count_];
-	memcpy(options_, tmp, sizeof(BlissOption*) * (options_count_));
+	memcpy(options_, tmp, sizeof(BlissOption*) * (options_count_ -1));
+	options_[options_count_ - 1] = option;
 	delete[] tmp;
 
 	return this;
 }
 
-BlissCommand* BlissCommand::DeleteOptionByName(string name) {
+BlissCommand* BlissCommand::DeleteOptionByName(std::string name) {
 	for (int i = 0; i < options_count_; i++) {
 		if (name == options_[i]->name() || name == options_[i]->name_short()) {
 			delete options_[i];
 			options_[i] = NULL;
-			options_count_--;
 		}
 	}
 
@@ -74,6 +95,7 @@ BlissCommand* BlissCommand::DeleteOptionByName(string name) {
 		}
 	}
 	delete[] options_;
+	options_count_--;
 	options_ = new BlissOption*[options_count_];
 	memcpy(options_, tmp, sizeof(BlissOption*) * (options_count_));
 	return this;

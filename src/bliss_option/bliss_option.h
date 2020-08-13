@@ -12,9 +12,9 @@ class BlissOption : public BlissExec {
 		BlissOption(string name);
 		~BlissOption();
 		string name_short();
-		BlissOption* set_name(string name);
-		BlissOption* set_name_short(string name_short);
-		BlissOption* set_description(string description);
+		virtual BlissOption* set_name(string name);
+		 BlissOption* set_name_short(string name_short);
+		virtual BlissOption* set_description(string description);
 
 	private:
 		string name_short_;

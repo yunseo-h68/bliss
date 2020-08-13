@@ -10,8 +10,8 @@ class BlissExec {
 		~BlissExec();
 		string name();
 		string description();
-		BlissExec* set_name(string name);
-		BlissExec* set_description(string description);
+		virtual BlissExec* set_name(string name);
+		virtual BlissExec* set_description(string description);
 
 		virtual void Exec(){}
 	private:

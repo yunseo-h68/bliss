@@ -5,24 +5,24 @@
 #include "../bliss_exec/bliss_exec.h"
 #include "../bliss_option/bliss_option.h"
 
-using namespace std;
-
 class BlissCommand : public BlissExec {
 	public:
-		BlissCommand(string name);
+		BlissCommand();
+		BlissCommand(std::string name);
 		~BlissCommand();
 		string usage();
 		int options_count();
-		BlissCommand* set_name(string name);
-		BlissCommand* set_description(string name);
-		BlissCommand* set_usage(string usage);
+		virtual BlissCommand* set_name(std::string name);
+		virtual BlissCommand* set_description(std::string description);
+		virtual BlissCommand* set_usage(std::string usage);
 		BlissOption* GetOptionByIndex(int index);
-		BlissOption* GetOptionByName(string name);
-		BlissCommand* AddOption(BlissOption* option);
-		BlissCommand* DeleteOptionByName(string name);
+		BlissOption* GetOptionByName(std::string name);
+		BlissOption* GetOptionByNameShort(std::string name_short);
+		virtual BlissCommand* AddOption(BlissOption* option);
+		virtual BlissCommand* DeleteOptionByName(std::string name);
 
 	private:
-		string usage_;
+		std::string usage_;
 		int options_count_;
 		BlissOption** options_;
 };
