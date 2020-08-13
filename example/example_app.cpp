@@ -4,6 +4,11 @@
 
 class SubHello : public BlissCommand {
 	public:
+		SubHello() {
+			BlissCommand::set_name("hello");
+			BlissCommand::set_description("print \'Hello BLISS SUBCOMMAND\'");
+		}
+
 		virtual void Exec() {
 			std::cout << "HELLO BLISS SUBCOMMAND\n";
 		}
@@ -11,31 +16,21 @@ class SubHello : public BlissCommand {
 
 class OptionHello : public BlissOption {
 	public:
+		OptionHello() {
+			BlissOption::set_name("hello");
+			BlissOption::set_name_short("h");
+			BlissOption::set_description("print \'HELLO BLISS OPTION\'");
+		}
+
 		virtual void Exec() {
 			std::cout << "HELLO BLISS OPTION\n";
 		}
 };
 
-static SubHello* CreateSubHello() {
-	SubHello* subcommandHello = new SubHello;
-	subcommandHello->set_name("hello")
-		           ->set_description("print \'HELLO BLISS SUBCOMMAND\'");
-
-	return subcommandHello;
-}
-
-static OptionHello* CreateOptionHello() {
-	OptionHello* optionHello = new OptionHello();
-	optionHello->set_name("hello")
-		       ->set_name_short("h")
-			   ->set_description("print \'HELLO BLISS OPTION\'");
-	return optionHello;
-}
-
 BlissApp* ExampleApp() {
 	BlissApp* exampleApp = new BlissApp("exampleApp");
-	SubHello* subHello = CreateSubHello();
-	OptionHello* optionHello = CreateOptionHello();
+	SubHello* subHello = new SubHello; 
+	OptionHello* optionHello = new OptionHello;
 	
 	exampleApp->set_description("example of bliss")
 		      ->set_usage("exampleApp [OPTIONS] [SUBCOMMANDS]")
