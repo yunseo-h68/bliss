@@ -1,38 +1,36 @@
 #include "bliss_option.h"
 
-using namespace std;
-
 BlissOption::BlissOption() {
-	set_name("");
-	this->name_short_ = "";
+	BlissExec::set_name("");
+	name_short_ = "";
 	set_description("");
 }
 
-BlissOption::BlissOption(string name) {
-	set_name(name);
-	this->name_short_ = "";
-	set_description("");
+BlissOption::BlissOption(std::string name) {
+	BlissExec::set_name(name);
+	name_short_ = "";
+	BlissExec::set_description("");
 }
 
 BlissOption::~BlissOption() {
 
 }
 
-string BlissOption::name_short() {
-	return this->name_short_;
+std::string BlissOption::name_short() {
+	return name_short_;
 }
 
-BlissOption* BlissOption::set_name(string name) {
+BlissOption* BlissOption::set_name(std::string name) {
 	BlissExec::set_name(name);
 	return this;
 }
 
-BlissOption* BlissOption::set_name_short(string name_short) {
-	this->name_short_ = name_short;
+BlissOption* BlissOption::set_name_short(std::string name_short) {
+	name_short_ = name_short;
 	return this;
 }
 
-BlissOption* BlissOption::set_description(string description) {
-	set_description(description);
+BlissOption* BlissOption::set_description(std::string description) {
+	BlissExec::set_description(description);
 	return this;
 }

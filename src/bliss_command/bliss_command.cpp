@@ -1,13 +1,14 @@
 #include <cstring>
 #include "bliss_command.h"
 
+BlissCommand::BlissCommand(std::string name) {
+	BlissExec::set_name(name);
+	options_ = new BlissOption*[1];
+}
+
 BlissCommand::BlissCommand():BlissCommand("") {
 }
 
-BlissCommand::BlissCommand(std::string name):options_count_(0) {
-	set_name(name);
-	options_ = new BlissOption*[1];
-}
 
 BlissCommand::~BlissCommand() {
 	for (int i = 0; i < options_count_; i++) {
@@ -16,7 +17,7 @@ BlissCommand::~BlissCommand() {
 	delete[] options_;
 }
 
-string BlissCommand::usage() {
+std::string BlissCommand::usage() {
 	return usage_;
 }
 
@@ -25,12 +26,12 @@ int BlissCommand::options_count() {
 }
 
 BlissCommand* BlissCommand::set_name(std::string name) {
-	set_name(name);
+	BlissExec::set_name(name);
 	return this;
 }
 
 BlissCommand* BlissCommand::set_description(std::string description) {
-	set_description(description);
+	BlissExec::set_description(description);
 	return this;
 }
 

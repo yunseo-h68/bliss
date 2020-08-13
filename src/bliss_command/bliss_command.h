@@ -10,7 +10,7 @@ class BlissCommand : public BlissExec {
 		BlissCommand();
 		BlissCommand(std::string name);
 		~BlissCommand();
-		string usage();
+		std::string usage();
 		int options_count();
 		virtual BlissCommand* set_name(std::string name);
 		virtual BlissCommand* set_description(std::string description);

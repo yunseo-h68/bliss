@@ -4,20 +4,18 @@
 #include <string>
 #include "../bliss_exec/bliss_exec.h"
 
-using namespace std;
-
 class BlissOption : public BlissExec {
 	public:
 		BlissOption();
-		BlissOption(string name);
+		BlissOption(std::string name);
 		~BlissOption();
-		string name_short();
-		virtual BlissOption* set_name(string name);
-		 BlissOption* set_name_short(string name_short);
-		virtual BlissOption* set_description(string description);
+		std::string name_short();
+		virtual BlissOption* set_name(std::string name);
+		BlissOption* set_name_short(std::string name_short);
+		virtual BlissOption* set_description(std::string description);
 
 	private:
-		string name_short_;
+		std::string name_short_;
 };
 
 #endif

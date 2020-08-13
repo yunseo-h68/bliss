@@ -2,12 +2,12 @@
 #include <cstring>
 #include "bliss_app.h"
 
-BlissApp::BlissApp() {
-	set_name("");
+BlissApp::BlissApp():BlissApp("") {
 }
 
-BlissApp::BlissApp(std::string name) {
+BlissApp::BlissApp(std::string name):subcommands_count_(0) {
 	set_name(name);
+	subcommands_ = new BlissCommand*[1];
 }
 
 BlissApp::~BlissApp() {
@@ -18,27 +18,27 @@ BlissApp::~BlissApp() {
 }
 
 BlissApp* BlissApp::set_name(std::string name) {
-	set_name(name);
+	BlissExec::set_name(name);
 	return this;
 }
 
 BlissApp* BlissApp::set_description(std::string description) {
-	set_description(description);
+	BlissExec::set_description(description);
 	return this;
 }
 
 BlissApp* BlissApp::set_usage(std::string usage) {
-	set_usage(usage);
+	BlissCommand::set_usage(usage);
 	return this;
 }
 
 BlissApp* BlissApp::AddOption(BlissOption* option) {
-	AddOption(option);
+	BlissCommand::AddOption(option);
 	return this;
 }
 
 BlissApp* BlissApp::DeleteOptionByName(std::string name) {
-	DeleteOptionByName(name);
+	BlissCommand::DeleteOptionByName(name);
 	return this;
 }
 
@@ -129,6 +129,7 @@ void BlissApp::PrintHelp() {
 		std::cout << "\nSubcommands:\n";
 		for (int i = 0; i < subcommands_count_; i++) {
 			BlissCommand* tmp = GetSubcommandByIndex(i);
+			std::cout << "\t";
 			if (tmp->name().length() > 0) {
 				std::cout << tmp->name() << " ";
 			}

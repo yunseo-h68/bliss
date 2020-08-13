@@ -2,21 +2,20 @@
 #define BLISS_BLISS_EXEC_H
 
 #include <string>
-using namespace std;
 
 class BlissExec {
 	public:
 		BlissExec();
 		~BlissExec();
-		string name();
-		string description();
-		virtual BlissExec* set_name(string name);
-		virtual BlissExec* set_description(string description);
+		std::string name();
+		std::string description();
+		virtual BlissExec* set_name(std::string name);
+		virtual BlissExec* set_description(std::string description);
 
 		virtual void Exec(){}
 	private:
-		string name_;
-		string description_;
+		std::string name_;
+		std::string description_;
 };
 
 #endif

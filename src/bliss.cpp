@@ -20,7 +20,7 @@ int bliss_run(BlissApp* app, int argc, char* argv[]) {
 	}
 
 	for (int i = 1; i < argc; i++) {
-		string name;
+		std::string name;
 		if (strlen(argv[i]) >= 2 && argv[i][0] == '-') {
 			name = parse_option_name(argv[i]);
 			BlissOption* option_tmp = NULL;
@@ -50,5 +50,7 @@ int bliss_run(BlissApp* app, int argc, char* argv[]) {
 		subcommand_tmp -> Exec();
 	}
 	
+	delete app;
+
 	return 0;
 }

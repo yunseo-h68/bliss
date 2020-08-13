@@ -8,20 +8,20 @@ BlissExec::BlissExec() {
 BlissExec::~BlissExec() {
 }
 
-string BlissExec::name() {
+std::string BlissExec::name() {
 	return name_;
 }
 
-string BlissExec::description() {
+std::string BlissExec::description() {
 	return description_;
 }
 
-BlissExec* BlissExec::set_name(string name) {
+BlissExec* BlissExec::set_name(std::string name) {
 	name_ = name;
 	return this;
 }
 
-BlissExec* BlissExec::set_description(string description) {
+BlissExec* BlissExec::set_description(std::string description) {
 	description_ = description;
 	return this;
 }
