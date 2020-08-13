@@ -7,20 +7,19 @@
 
 using namespace std;
 
-class BlissCommand : BlissExec {
+class BlissCommand : public BlissExec {
 	public:
 		BlissCommand(string name);
 		~BlissCommand();
-		BlissCommand* Init();
 		string usage();
 		int options_count();
 		BlissCommand* set_name(string name);
 		BlissCommand* set_description(string name);
 		BlissCommand* set_usage(string usage);
-		BlissOption GetOptionByIndex(int index);
-		BlissOption GetOptionByName(string name);
-		BlissCommand* AddOption(BlissOption option);
-		BlissCommand* DeleteOption(BlissOption option);
+		BlissOption* GetOptionByIndex(int index);
+		BlissOption* GetOptionByName(string name);
+		BlissCommand* AddOption(BlissOption* option);
+		BlissCommand* DeleteOptionByName(string name);
 
 	private:
 		string usage_;

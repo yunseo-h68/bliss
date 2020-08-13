@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class BlissOption : BlissExec {
+class BlissOption : public BlissExec {
 	public:
 		BlissOption();
 		BlissOption(string name);
