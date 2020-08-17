@@ -5,16 +5,18 @@
 BlissApp::BlissApp():BlissApp("") {
 }
 
-BlissApp::BlissApp(std::string name):subcommands_count_(0) {
+BlissApp::BlissApp(std::string name) {
 	set_name(name);
-	subcommands_ = new BlissCommand*[1];
 }
 
 BlissApp::~BlissApp() {
-	for (int i = 0; i < subcommands_count_; i++) {
-		delete subcommands_[i];
+	for (auto subcommand : subcommands_) {
+		delete subcommand;
 	}
-	delete[] subcommands_;
+}
+
+int BlissApp::subcommands_count() {
+	return subcommands_.size();
 }
 
 BlissApp* BlissApp::set_name(std::string name) {
@@ -43,53 +45,32 @@ BlissApp* BlissApp::DeleteOptionByName(std::string name) {
 }
 
 BlissApp* BlissApp::AddSubcommand(BlissCommand* subcommand) {
-	BlissCommand** tmp = new BlissCommand*[subcommands_count_];
-	memcpy(tmp, subcommands_, sizeof(BlissCommand*) * subcommands_count_);
-
-	delete[] subcommands_;
-	subcommands_count_++;
-
-	subcommands_ = new BlissCommand*[subcommands_count_];
-	memcpy(subcommands_, tmp, sizeof(BlissCommand*) * (subcommands_count_ - 1));
-	subcommands_[subcommands_count_ - 1] = subcommand;
-	delete[] tmp;
-
+	subcommands_.push_back(subcommand);
 	return this;
 }
 
 BlissApp* BlissApp::DeleteSubcommandByName(std::string name) {
-	for (int i = 0; i < subcommands_count_; i++) {
-		if (name == subcommands_[i]->name()) {
-			delete subcommands_[i];
-			subcommands_[i] = NULL;
+	for (std::vector<BlissCommand*>::iterator iter = subcommands_.begin(); iter != subcommands_.end(); iter++) {
+		if (name == (*iter)->name()) {
+			delete (*iter);
+			subcommands_.erase(iter);
+			break;
 		}
 	}
-
-	BlissCommand** tmp = new BlissCommand*[subcommands_count_ - 1];
-	for (int i = 0, j = 0; i < subcommands_count_; i++) {
-		if (subcommands_[i] != NULL) {
-			tmp[j] = subcommands_[i];
-			j++;
-		}
-	}
-	delete[] subcommands_;
-	subcommands_count_--;
-	subcommands_ = new BlissCommand*[subcommands_count_];
-	memcpy(subcommands_, tmp, sizeof(BlissCommand*) * (subcommands_count_));
 	return this;
 }
 
 BlissCommand* BlissApp::GetSubcommandByIndex(int index) {
-	if (index < 0 || index >= subcommands_count_) {
+	if (index < 0 || index >= subcommands_.size()) {
 		return NULL;
 	}
 	return subcommands_[index];
 }
 
 BlissCommand* BlissApp::GetSubcommandByName(std::string name) {
-	for (int i = 0; i < subcommands_count_; i++) {
-		if (name == subcommands_[i]->name()) {
-			return subcommands_[i];
+	for (auto subcommand : subcommands_) {
+		if (name == subcommand->name()) {
+			return subcommand;
 		}
 	}
 	return NULL;
@@ -125,9 +106,9 @@ void BlissApp::PrintHelp() {
 			std::cout << "\n";
 		}
 	}
-	if (subcommands_count_ > 0) {
+	if (subcommands_.size() > 0) {
 		std::cout << "\nSubcommands:\n";
-		for (int i = 0; i < subcommands_count_; i++) {
+		for (int i = 0; i < subcommands_.size(); i++) {
 			BlissCommand* tmp = GetSubcommandByIndex(i);
 			std::cout << "\t";
 			if (tmp->name().length() > 0) {

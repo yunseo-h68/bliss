@@ -2,6 +2,7 @@
 #define BLISS_BLISS_APP_H
 
 #include <string>
+#include <vector>
 #include "../bliss_command/bliss_command.h"
 
 class BlissApp : public BlissCommand {
@@ -23,8 +24,7 @@ class BlissApp : public BlissCommand {
 		virtual void Exec();
 
 	private:
-		int subcommands_count_;
-		BlissCommand** subcommands_;
+		std::vector<BlissCommand*> subcommands_;
 };
 
 #endif

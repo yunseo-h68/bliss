@@ -2,6 +2,7 @@
 #define BLISS_BLISS_COMMAND_H
 
 #include <string>
+#include <vector>
 #include "../bliss_exec/bliss_exec.h"
 #include "../bliss_option/bliss_option.h"
 
@@ -23,8 +24,7 @@ class BlissCommand : public BlissExec {
 
 	private:
 		std::string usage_;
-		int options_count_;
-		BlissOption** options_;
+		std::vector<BlissOption*> options_;
 };
 
 #endif

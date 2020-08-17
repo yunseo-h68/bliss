@@ -2,6 +2,7 @@
 #define BLISS_H
 
 #include <string>
+#include <vector>
 
 class BlissExec {
 	public:
@@ -50,8 +51,7 @@ class BlissCommand : public BlissExec {
 
 	private:
 		std::string usage_;
-		int options_count_;
-		BlissOption** options_;
+		std::vector<BlissOption*> options_;
 };
 
 class BlissApp : public BlissCommand {
@@ -73,8 +73,7 @@ class BlissApp : public BlissCommand {
 		virtual void Exec();
 
 	private:
-		int subcommands_count_;
-		BlissCommand** subcommands_;
+		std::vector<BlissCommand*> subcommands_;
 };
 
 int bliss_run(BlissApp* app, int argc, char* argv[]);

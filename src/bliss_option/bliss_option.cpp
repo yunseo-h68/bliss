@@ -1,9 +1,6 @@
 #include "bliss_option.h"
 
-BlissOption::BlissOption() {
-	BlissExec::set_name("");
-	name_short_ = "";
-	set_description("");
+BlissOption::BlissOption():BlissOption("") {
 }
 
 BlissOption::BlissOption(std::string name) {
